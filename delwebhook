@@ -1,0 +1,33 @@
+import requests
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the Bot token and the chat ID from the environment variables
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+# Telegram API URL to delete the webhook
+DELETE_WEBHOOK_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/deleteWebhook"
+
+def delete_webhook():
+    try:
+        # Send a DELETE request to the Telegram API
+        response = requests.get(DELETE_WEBHOOK_URL)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            result = response.json()
+            if result['ok']:
+                print("Webhook deleted successfully.")
+            else:
+                print("Failed to delete webhook:", result['description'])
+        else:
+            print(f"Failed to send request. Status code: {response.status_code}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error deleting webhook: {e}")
+
+if __name__ == "__main__":
+    delete_webhook()
